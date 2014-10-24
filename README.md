@@ -4,7 +4,7 @@ http://github.com/welcheb/Reproducible_Research
 Collection of links to reproducible research associated with the Welch Lab at the Vanderbilt University Institute of Imaging Science
 
 ### Peer Reviewed Publications
-*  MRM_Sengupta_CMTGoldenAngle (under review)
+*  [https://github.com/senguptasaikat/MRM_Sengupta_Moving_Table_Golden_Angle_MRI](https://github.com/senguptasaikat/MRM_Sengupta_Moving_Table_Golden_Angle_MRI) (accepted for publication)
 
 ### Public Repositories
 *  [https://github.com/welcheb/FattyRiot](https://github.com/welcheb/FattyRiot)
