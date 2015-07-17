@@ -4,6 +4,7 @@ http://github.com/welcheb/Reproducible_Research
 Collection of links to reproducible research associated with the Welch Lab at the Vanderbilt University Institute of Imaging Science
 
 ### Peer Reviewed Publications
+*  [https://github.com/senguptasaikat/MRM_Sengupta_Moving_Table_Fat-Water_MRI_with_Dynamic_B0_Shimming](https://github.com/senguptasaikat/MRM_Sengupta_Moving_Table_Fat-Water_MRI_with_Dynamic_B0_Shimming) (Magnetic Resonance in Medicine. Accepted.)
 *  [https://github.com/senguptasaikat/MRM_Sengupta_Moving_Table_Golden_Angle_MRI](https://github.com/senguptasaikat/MRM_Sengupta_Moving_Table_Golden_Angle_MRI) ([Magnetic Resonance in Medicine. December 2, 2014](http://www.ncbi.nlm.nih.gov/pubmed/25461600))
 
 ### Public Repositories
