@@ -4,7 +4,23 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="helper.js"></script>
+
+        <link rel="stylesheet" href="contrib/tablesorter-master/css/jq.css" type="text/css" media="print, projection, screen" />
+      	<link rel="stylesheet" href="contrib/tablesorter-master/themes/blue/style.css" type="text/css" media="print, projection, screen" />
+      	<script type="text/javascript" src="contrib/tablesorter-master/jquery-latest.js"></script>
+      	<script type="text/javascript" src="contrib/tablesorter-master/jquery.tablesorter.js"></script>
+      	<script type="text/javascript" src="contrib/tablesorter-master/js/chili/chili-1.8b.js"></script>
+      	<script type="text/javascript" src="contrib/tablesorter-master/js/docs.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function() {
+        	// call the tablesorter plugin
+        	$("table").tablesorter({
+        		// sort on the first column, order asc
+        		sortList: [[0,0]],
+            widgets: ['zebra']
+        	});
+        });
+      	</script>
 </head>
 <body>
 <h1>Dashboard of Reproducible Research</h1>
@@ -17,7 +33,7 @@ Nashville, Tennessee, U.S.A.<br/>
 </p>
 
 <h2>Replication Code for Peer Reviewed Manuscripts</h2>
-<table id="rcode" border="1"></table>
+<table id="rcode" border="1" class="tablesorter"></table>
 
 <h2>Replication Data for Peer Reviewed Manuscripts</h2>
 <table id="rdata" border="1"></table>
@@ -58,9 +74,14 @@ Nashville, Tennessee, U.S.A.<br/>
     }]
   };
 
-  jQuery('#rcode').html('<tr><th>Created</th><th>Repository</th><th>Forks</th><th>Watchers</th><th>Stars</th></tr>');
+  jQuery('#rcode').html('<thead><tr><th>Created</th><th>Repository</th><th>Forks</th><th>Watchers</th><th>Stars</th></tr></thead><tbody>');
 
   var idx_row = 0;
+  var created_at = [];
+  var forks_count = [];
+  var watchers_count = [];
+  var stargazers_count = [];
+  var repo_name = [];
 
   for (var idx_host = 0; idx_host < rcode.hosts.length; idx_host++) {
     for (var idx_user = 0; idx_user < rcode.hosts[idx_host].users.length; idx_user++) {
@@ -68,8 +89,6 @@ Nashville, Tennessee, U.S.A.<br/>
 
         var url = rcode.hosts[idx_host].url + rcode.hosts[idx_host].users[idx_user].username + '/' + rcode.hosts[idx_host].users[idx_user].repos[idx_repo].name;
         var api_url = rcode.hosts[idx_host].api + rcode.hosts[idx_host].users[idx_user].username + '/' + rcode.hosts[idx_host].users[idx_user].repos[idx_repo].name;
-
-        console.log( 'idx_row = ' + idx_row++ + ' url: ' + url + ' api_url: ' + api_url);
 
         var data = null;
 
@@ -87,21 +106,44 @@ Nashville, Tennessee, U.S.A.<br/>
           });
 
           if (data !== null) {
-            jQuery('#rcode').append('<tr>' +
-            '<td>' + data.created_at + '</td>' +
-            '<td>' + '<a target="_blank" href="' + url + '">' + rcode.hosts[idx_host].users[idx_user].repos[idx_repo].name + '</a></td>' +
-            '<td>' + data.forks_count + '</td>' +
-            '<td>' + data.watchers_count + '</td>' +
-            '<td>' + data.stargazers_count + '</td>' +
-            '</tr>');
+            created_at[idx_row] = data.created_at.substring(0, 10);
+            forks_count[idx_row] = data.forks_count;
+            watchers_count[idx_row] = data.watchers_count;
+            stargazers_count[idx_row] = data.stargazers_count;
           }
           else {
+            created_at[idx_row] = 'NA';
+            forks_count[idx_row] = 'NA';
+            watchers_count[idx_row] = 'NA';
+            stargazers_count[idx_row] = 'NA';
             console.log( 'DATA ERROR: data is null');
           }
 
+          repo_name[idx_row] = rcode.hosts[idx_host].users[idx_user].repos[idx_repo].name;
+
+          jQuery('#rcode').append('<tr>' +
+          '<td>' + created_at[idx_row] + '</td>' +
+          '<td>' + '<a target="_blank" href="' + url + '">' + repo_name[idx_row] + '</a></td>' +
+          '<td>' + forks_count[idx_row] + '</td>' +
+          '<td>' + watchers_count[idx_row] + '</td>' +
+          '<td>' + stargazers_count[idx_row] + '</td>' +
+          '</tr>');
+
+          console.log( 'idx_row = ' + idx_row + ' url: ' + url + ' api_url: ' + api_url);
+
+          // increment idx_row
+          idx_row++;
       }
     }
   }
+
+  jQuery('#rcode').append('<tfoot><tr>' +
+  '<td>' + Array.from(new Set(created_at)).length + '</td>' +
+  '<td>' + Array.from(new Set(repo_name)).length + '</td>' +
+  '<td>' + forks_count.reduce(function(a, b){return a+b;}) + '</td>' +
+  '<td>' + watchers_count.reduce(function(a, b){return a+b;}) + '</td>' +
+  '<td>' + stargazers_count.reduce(function(a, b){return a+b;}) + '</td>' +
+  '</tr></tfoot></tbody>');
 
 </script>
 
