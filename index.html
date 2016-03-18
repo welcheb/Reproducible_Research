@@ -1,1 +1,109 @@
-My Page
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+        <title>Welch Lab Reproducible Research</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="helper.js"></script>
+</head>
+<body>
+<h1>Dashboard of Reproducible Research</h1>
+<h2>Laboratory of E. Brian Welch, Ph.D., M.B.A.</h2>
+
+<p>
+Department of Radiology and Radiological Sciences<br/>
+Vanderbilt University Medical Center<br/>
+Nashville, Tennessee, U.S.A.<br/>
+</p>
+
+<h2>Replication Code for Peer Reviewed Manuscripts</h2>
+<table id="rcode" border="1"></table>
+
+<h2>Replication Data for Peer Reviewed Manuscripts</h2>
+<table id="rdata" border="1"></table>
+
+<h2>Other Publically Available Software Tools</h2>
+<table id="pcode" border="1"></table>
+
+<h2>Other Publically Available Data</h2>
+<table id="pdata" border="1"></table>
+
+<script type="text/javascript">
+
+  rcode = {
+    hosts: [{
+      url: 'https://www.github.com/',
+      api: 'https://api.github.com/repos/',
+      users: [{
+        username: 'davidssmith',
+        name: 'David S. Smith',
+        repos: [{
+          name: 'DCEMRI.jl'
+        }]
+      }, {
+        username: 'gifforda',
+        name: 'Aliya Gifford',
+        repos: [{
+          name: 'JMI_Gifford_WAT_CT_HU_vs_MRI_FSF'
+        }]
+      }, {
+        username: 'senguptasaikat',
+        name: 'Saikat Sengupta',
+        repos: [{
+          name: 'MRM_Sengupta_Moving_Table_Golden_Angle_MRI'
+        }, {
+          name: 'MRM_Sengupta_Moving_Table_Fat-Water_MRI_with_Dynamic_B0_Shimming'
+        }]
+      }]
+    }]
+  };
+
+  jQuery('#rcode').html('<tr><th>Created</th><th>Repository</th><th>Forks</th><th>Watchers</th><th>Stars</th></tr>');
+
+  var idx_row = 0;
+
+  for (var idx_host = 0; idx_host < rcode.hosts.length; idx_host++) {
+    for (var idx_user = 0; idx_user < rcode.hosts[idx_host].users.length; idx_user++) {
+      for (var idx_repo = 0; idx_repo < rcode.hosts[idx_host].users[idx_user].repos.length; idx_repo++) {
+
+        var url = rcode.hosts[idx_host].url + rcode.hosts[idx_host].users[idx_user].username + '/' + rcode.hosts[idx_host].users[idx_user].repos[idx_repo].name;
+        var api_url = rcode.hosts[idx_host].api + rcode.hosts[idx_host].users[idx_user].username + '/' + rcode.hosts[idx_host].users[idx_user].repos[idx_repo].name;
+
+        console.log( 'idx_row = ' + idx_row++ + ' url: ' + url + ' api_url: ' + api_url);
+
+        var data = null;
+
+        $.ajax({
+            url: api_url,
+            async: false, // important!
+            dataType: 'json',
+            success: function( d ) {
+              data = d;
+              console.log( 'JSON SUCCESS: ' + api_url);
+            },
+            error: function( d ) {
+              console.log( 'JSON ERROR: ' + api_url + ' ' + d.message );
+            }
+          });
+
+          if (data !== null) {
+            jQuery('#rcode').append('<tr>' +
+            '<td>' + data.created_at + '</td>' +
+            '<td>' + '<a target="_blank" href="' + url + '">' + rcode.hosts[idx_host].users[idx_user].repos[idx_repo].name + '</a></td>' +
+            '<td>' + data.forks_count + '</td>' +
+            '<td>' + data.watchers_count + '</td>' +
+            '<td>' + data.stargazers_count + '</td>' +
+            '</tr>');
+          }
+          else {
+            console.log( 'DATA ERROR: data is null');
+          }
+
+      }
+    }
+  }
+
+</script>
+
+</body>
+</html>
